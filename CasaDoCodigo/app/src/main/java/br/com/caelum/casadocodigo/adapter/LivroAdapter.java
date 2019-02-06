@@ -12,8 +12,10 @@ import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
 import br.com.caelum.casadocodigo.modelo.Livro;
+import br.com.caelum.casadocodigo.utils.LivrosDelegate;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LivroAdapter extends RecyclerView.Adapter {
 
@@ -61,6 +63,13 @@ public class LivroAdapter extends RecyclerView.Adapter {
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R.id.item_livro)
+        public void clickItem() {
+            Livro livro = livros.get(getAdapterPosition());
+            LivrosDelegate delegate = (LivrosDelegate) itemView.getContext();
+            delegate.lidaComLivroSelecionado(livro);
         }
     }
 }

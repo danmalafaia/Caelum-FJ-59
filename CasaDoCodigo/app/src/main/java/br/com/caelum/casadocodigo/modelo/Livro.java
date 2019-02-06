@@ -1,8 +1,9 @@
 package br.com.caelum.casadocodigo.modelo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Livro {
+public class Livro implements Serializable {
 
     private long id;
     private String nome;
@@ -16,7 +17,8 @@ public class Livro {
     private String urlFoto;
     private List<Autor> autores;
 
-    public Livro() {}
+    public Livro() {
+    }
 
     public Livro(String nome, String descricao, List<Autor> autores) {
         this.nome = nome;
