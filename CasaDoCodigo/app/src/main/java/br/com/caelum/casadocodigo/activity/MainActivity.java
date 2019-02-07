@@ -8,8 +8,6 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-
 import br.com.caelum.casadocodigo.R;
 import br.com.caelum.casadocodigo.events.LivroEvent;
 import br.com.caelum.casadocodigo.fragment.DetalhesLivroFragment;
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
         transaction.replace(R.id.frame_principal, listaLivrosFragment);
         transaction.commit();
 
-        new WebClient().getLivros();
+        new WebClient().getLivros(0, 10);
     }
 
     @Override

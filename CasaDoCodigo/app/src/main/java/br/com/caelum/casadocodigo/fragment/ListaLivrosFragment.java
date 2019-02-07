@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
+import br.com.caelum.casadocodigo.adapter.EndlessListListener;
 import br.com.caelum.casadocodigo.adapter.LivroAdapter;
 import br.com.caelum.casadocodigo.modelo.Livro;
+import br.com.caelum.casadocodigo.server.WebClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,9 +40,14 @@ public class ListaLivrosFragment extends Fragment {
         return view;
     }
 
-    public void populaListaCom(List<Livro> livros) {
-        this.livros.clear();
+    public void populaListaCom(final List<Livro> livros) {
         this.livros.addAll(livros);
         recycler.getAdapter().notifyDataSetChanged();
+        recycler.addOnScrollListener(new EndlessListListener() {
+            @Override
+            public void carregaMaisItens() {
+                new WebClient().getLivros(livros.size(), 10);
+            }
+        });
     }
 }
