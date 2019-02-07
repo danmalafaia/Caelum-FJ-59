@@ -1,8 +1,11 @@
 package br.com.caelum.casadocodigo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,6 +38,28 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
     }
 
     @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.vai_para_carrinho) {
+            Intent vaiParaCarrinho = new Intent(this, CarrinhoActivity.class);
+            startActivity(vaiParaCarrinho);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void lidaComLivroSelecionado(Livro livro) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         DetalhesLivroFragment detalhesLivroFragment = criaDetalhesCom(livro);
@@ -61,9 +86,5 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
         Toast.makeText(this, "Não foi possível carregar os livros...", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
+
 }
