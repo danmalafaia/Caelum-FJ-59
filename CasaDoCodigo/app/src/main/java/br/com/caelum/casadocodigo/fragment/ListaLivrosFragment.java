@@ -40,8 +40,8 @@ public class ListaLivrosFragment extends Fragment {
         return view;
     }
 
-    public void populaListaCom(final List<Livro> livros) {
-        this.livros.addAll(livros);
+    public void populaListaCom(final List<Livro> newlivros) {
+        this.livros.addAll(newlivros);
         recycler.getAdapter().notifyDataSetChanged();
         recycler.addOnScrollListener(new EndlessListListener() {
             @Override
