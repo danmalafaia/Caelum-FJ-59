@@ -2,11 +2,16 @@ package br.com.caelum.casadocodigo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -21,13 +26,36 @@ import br.com.caelum.casadocodigo.utils.LivrosDelegate;
 
 public class MainActivity extends AppCompatActivity implements LivrosDelegate {
 
+    private final String TAG = "CasaDoCodigoAppMain";
+
     private ListaLivrosFragment listaLivrosFragment;
+    private FirebaseAuth.AuthStateListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
+
+        listener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    firebaseAuth.removeAuthStateListener(this);
+                    finish();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            }
+        };
+
+        FirebaseAuth.getInstance().addAuthStateListener(listener);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         listaLivrosFragment = new ListaLivrosFragment();
@@ -54,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
         if (item.getItemId() == R.id.vai_para_carrinho) {
             Intent vaiParaCarrinho = new Intent(this, CarrinhoActivity.class);
             startActivity(vaiParaCarrinho);
+            return true;
+        } else if (item.getItemId() == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
             return true;
         }
         return false;
